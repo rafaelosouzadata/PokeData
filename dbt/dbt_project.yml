@@ -1,0 +1,23 @@
+name: 'pokedata'
+version: '1.0.0'
+config-version: 2
+
+# Esse nome DEVE ser o mesmo que você colocou no seu profiles.yml
+profile: 'pokedata' 
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  pokedata:
+    # Aqui você define se quer que as tabelas sejam recriadas (table) 
+    # ou apenas atualizadas (incremental) por padrão
+    materialized: table

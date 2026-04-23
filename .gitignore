@@ -1,0 +1,6 @@
+PokeLog
+.env
+dbt/seeds/
+dbt/profiles.yml
+python/A pesquisar depois/
+**/__pycache__
