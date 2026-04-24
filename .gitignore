@@ -2,5 +2,8 @@ PokeLog
 .env
 dbt/seeds/
 dbt/profiles.yml
+dbt/.user.yml
+dbt/logs/
 python/A pesquisar depois/
 **/__pycache__
+venv/

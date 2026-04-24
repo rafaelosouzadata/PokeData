@@ -1,2 +1,7 @@
 pandas
 requests
+sqlalchemy
+pathlib
+python-dotenv
+psycopg2-binary
+
