@@ -1,6 +1,7 @@
 
 import os
-import requests
+import httpx
+import asyncio
 import pandas as pd
 import time
 from sqlalchemy import *
@@ -75,56 +76,42 @@ class processamento():
 				print("Use a number!")
 		return lista
 
-	def lista_automatica(batchsize=100):
-		lista = []
-		id = 0
+	@staticmethod
 
-		while id < 50:
-			id += 1
-			lista.append(id)
-			if len(lista) == batchsize:
-				yield lista
-				lista = []
-		if lista:
-			yield lista
-
-
-	def pedido(lista):
-		registros = []
-		for id in lista:
+	async def buscar_pokemon(client, id, sem):
+		async with sem:
 			url = f"https://pokeapi.co/api/v2/pokemon/{id}"
-			response = requests.get(url)
-			dados = response.json()
+			return await client.get(url)
 
-			dados_limpos = {
-				"id": dados["id"],
-				"nome": dados["name"],
-				"tipo": dados["types"],
-				"peso": dados["weight"],
-				"altura": dados["height"]
-			}
+	@staticmethod
+	async def conexao():
+		sem = asyncio.Semaphore(50)
+		async with httpx.AsyncClient() as client:
+			tarefas = [processamento.buscar_pokemon(client, id + 1, sem) for id in range(1025)]
 
-			registros.append(dados_limpos)
-		return registros
+			respostas = await asyncio.gather(*tarefas)
 
-	def pandificacao(registros):
-		df = pd.DataFrame(registros)
-		df = df.explode("tipo",ignore_index=True)
-		df["tipo"] = df["tipo"].apply(lambda x: x["type"]["name"])
-		return df
+			registros = []
+			for response in respostas:
+				if isinstance(response, httpx.Response) and response.status_code == 200:
+					dados = response.json()
+					dados_limpos = {
+						"id":dados["id"],
+						"name":dados["name"],
+						"types": ",".join([t["type"]["name"] for t in dados["types"]]),
+						"weight":dados["weight"],
+						"hight":dados["height"]
+					}
+					registros.append(dados_limpos)
 
+			df = pd.DataFrame(registros)
+
+			return df
+
+	@staticmethod
 	def processo_completo():
-		lista_batchs = []
-		for dados in processamento.lista_automatica():
-			registros = processamento.pedido(dados)
-			batch = processamento.pandificacao(registros)
-			lista_batchs.append(batch)
-			time.sleep(0.5)
-
-		df = pd.DataFrame()
-		for batch in lista_batchs:
-			df = pd.concat([df,batch], ignore_index=True)
-
+		
+		df = asyncio.run(processamento.conexao())
 		menu.espaçar()
 		print()
 		print(df)
