@@ -1,4 +1,4 @@
-version: '3.9'
+
 services:
   db:
     image: postgres:15
@@ -21,6 +21,8 @@ services:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
     container_name: "Poke_DBT"
 
+    ports:
+      - "8085:8080"
     volumes:
       - ./dbt:/usr/app
     environment:
@@ -28,41 +30,58 @@ services:
       - DBT_PROJECT_DIR=/usr/app
 
     profiles: ["cli"]
+    command: docs serve --port 8085
 
     depends_on:
       - db
     networks:
       - poke-net
 
-  airflow:
-    build: .
-    container_name: "Poke_Airflow"
+  # airflow:
+  #   build: .
+  #   container_name: "Poke_Airflow"
 
 
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./dags:/opt/airflow/dags
-    environment:
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${DB_USER}:${DB_PASS}@db/${DB_NAME}
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - _AIRFLOW_WWW_USER_CREATE=true
-      - _AIRFLOW_WWW_USER_USERNAME=${AF_USER}
-      - _AIRFLOW_WWW_USER_PASSWORD=${AF_PASS}
-      - _AIRFLOW_WWW_USER_ROLE=Admin
-      - _AIRFLOW_WWW_USER_FIRSTNAME=Airflow
-      - _AIRFLOW_WWW_USER_LASTNAME=Senhor_do_Universo
-      - _AIRFLOW_WWW_USER_EMAIL=admin@exemplo.com
-      # - _PIP_ADDITIONAL_REQUIREMENTS=requests pandas
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./dags:/opt/airflow/dags
+  #   environment:
+  #     - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${DB_USER}:${DB_PASS}@db/${DB_NAME}
+  #     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+  #     - _AIRFLOW_WWW_USER_CREATE=true
+  #     - _AIRFLOW_WWW_USER_USERNAME=${AF_USER}
+  #     - _AIRFLOW_WWW_USER_PASSWORD=${AF_PASS}
+  #     - _AIRFLOW_WWW_USER_ROLE=Admin
+  #     - _AIRFLOW_WWW_USER_FIRSTNAME=Airflow
+  #     - _AIRFLOW_WWW_USER_LASTNAME=Senhor_do_Universo
+  #     - _AIRFLOW_WWW_USER_EMAIL=admin@exemplo.com
+  #     # - _PIP_ADDITIONAL_REQUIREMENTS=requests pandas
 
-    depends_on:
-      - db
-    networks:
-      - poke-net
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - poke-net
 
-    # command: standalone
-    command: >
-      bash -c "airflow db migrate && airflow webserver"
+  #   # command: standalone
+  #   command: >
+  #     bash -c "airflow db migrate && airflow webserver"
+
+  metabase:
+      image: metabase/metabase:latest
+      container_name: "Poke_metabase"
+      restart: always
+
+      ports:
+        - "3000:3000"
+      environment:
+        - JAVA_OPTS=-Xmx512m
+      depends_on:
+        - db
+
+      networks:
+        - poke-net
+
 volumes:
   poke_data:
 
