@@ -2,6 +2,6 @@ version: 2
 
 sources:
   - name: pokedex_data
-    schema: public
+    schema: raw_pokemons
     tables:
-      - name: Pokemons
+      - name: Raw_Pokemons

@@ -5,4 +5,4 @@ select
 	"name",
 	"weight",
 	"hight"
-from {{ source('pokedex_data','Pokemons') }}
+from {{ ref('pokemon_clean')}}

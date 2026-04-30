@@ -3,7 +3,7 @@
 with "tipos_separados" as (
 		select distinct 
 			unnest(string_to_array(types, ',')) as "type"
-			from {{  source('pokedex_data', 'Pokemons')  }}
+			from {{ ref('pokemon_clean')}}
 	)
 select 
 	row_number()over(order by type) as "id", "type" 

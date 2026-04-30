@@ -116,7 +116,7 @@ class processamento():
 		print()
 		print(df)
 		conn = conexao_db.passar_conn()
-		df.to_sql("Pokemons", con=conn["engine"], if_exists='replace', index=False)
+		df.to_sql("Raw_Pokemons", con=conn["engine"], schema="raw_pokemons", if_exists='replace', index=False)
 
 class conexao_db():
 	@staticmethod
@@ -125,6 +125,9 @@ class conexao_db():
 		credenciais = conexao_db.pegar_dotenv()
 		url = f"postgresql://{credenciais["usuario"]}:{credenciais["senha"]}@{credenciais["host"]}:{credenciais["port"]}/{credenciais["banco"]}"
 		engine = create_engine(url)
+
+		with engine.begin() as conn:
+			conn.execute(text("CREATE SCHEMA IF NOT EXISTS raw_pokemons"))
 		
 		metadata = MetaData(); metadata.reflect(bind=engine)
 		conn = {"engine":engine, "metadata":metadata}
