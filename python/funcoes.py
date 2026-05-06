@@ -1,4 +1,3 @@
-
 import os
 import httpx
 import asyncio
@@ -7,6 +6,7 @@ import time
 from sqlalchemy import *
 from pathlib import Path
 from dotenv import load_dotenv
+from data_base import *
 
 class menu:
 	@staticmethod
@@ -115,37 +115,5 @@ class processamento():
 		menu.espaçar()
 		print()
 		print(df)
-		conn = conexao_db.passar_conn()
-		df.to_sql("Raw_Pokemons", con=conn["engine"], schema="public", if_exists='replace', index=False)
-
-class conexao_db():
-	@staticmethod
-
-	def passar_conn():
-		credenciais = conexao_db.pegar_dotenv()
-		url = f"postgresql://{credenciais["usuario"]}:{credenciais["senha"]}@{credenciais["host"]}:{credenciais["port"]}/{credenciais["banco"]}"
-		engine = create_engine(url)
-
-		# with engine.begin() as conn:
-		# 	conn.execute(text("CREATE SCHEMA IF NOT EXISTS raw_pokemons"))
-		
-		metadata = MetaData(); metadata.reflect(bind=engine)
-		conn = {"engine":engine, "metadata":metadata}
-		
-		return conn
-
-	def pegar_dotenv():
-		
-		load_dotenv(dotenv_path='../.env')
-
-		credenciais = {
-			"usuario": os.getenv("DB_USER"),
-			"senha": os.getenv("DB_PASS"),
-			"banco": os.getenv("DB_NAME"),
-			"host": os.getenv("DB_HOST"),
-			"port": os.getenv("DB_PORT")
-		}
-
-		for key, value in credenciais.items():
-			print(key, value)
-		return credenciais
+		conn = create_db_engine()
+		df.to_sql("Raw_Pokemons", con=conn, schema="public", if_exists='replace', index=False)
