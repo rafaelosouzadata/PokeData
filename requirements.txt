@@ -1,7 +1,9 @@
+numpy
 pandas
 httpx
 sqlalchemy
 pathlib
 python-dotenv
 psycopg2-binary
+prefect
 

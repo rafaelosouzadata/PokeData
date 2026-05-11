@@ -5,6 +5,7 @@ dbt/profiles.yml
 dbt/.user.yml
 dbt/logs/
 dbt/dbt/target/
+dbt/target/
 python/A pesquisar depois/
 **/__pycache__
 venv/
