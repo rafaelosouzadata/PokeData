@@ -66,6 +66,14 @@ def filtro(dados_sujos):
 
 	df = pd.DataFrame(registros)
 
+@task
+def filtro2(dados_sujos):
+	df = pd.DataFrame(dados_sujos)
+
+	df['types'] = df['types'].apply(lambda x: ",".join([t["type"]["name"] for t in x]))
+
+	df = df[["id", "name", "types", "weight", "height"]]
+
 	return df
 
 @flow(log_prints=True, name="Processo Completo")
@@ -73,10 +81,9 @@ def processo_completo():
 	
 	dados_brutos = asyncio.run(conexao())
 	dados_sujos = pythonizando_dados(dados_brutos)
-	df = filtro(dados_sujos)
+	df = filtro2(dados_sujos)
 
 	menu.espaçar()
 	print()
 	print(df)
-	# conn = create_db_engine()
-	# df.to_sql("Raw_Pokemons", con=conn, schema="public", if_exists='replace', index=False)
+	return df

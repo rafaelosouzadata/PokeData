@@ -10,5 +10,12 @@ from prefect import task, flow
 
 # menu.exibir(opcoes)
 
+@flow
+def ETL():
+	conn = processo_conexao()
+	df = processo_completo()
+	df.to_sql("Raw_Pokemons", con=conn, schema="public", if_exists='replace', index=False)
+	print("Processo Terminado")
+
 if __name__ == "__main__":
-	processo_completo()
+	ETL()
