@@ -4,5 +4,5 @@ select
 	"id",
 	"name",
 	"weight",
-	"hight"
+	"height"
 from {{ ref('pokemon_clean')}}

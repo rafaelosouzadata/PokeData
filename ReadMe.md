@@ -18,7 +18,32 @@ The project is containerized with **Docker** and follows a modern data stack app
 - **Visualization:** Interactive dashboards showing Pokémon attributes, types, and stats distributions.
 
 ## 🛠️ How to Run (TBA)
-*The setup instructions for Docker-compose will be available soon.*
+Create a file named ".env", paste the following and then complete what is missing:
+```
+DB_USER=yourusername
+DB_PASS=yourpassword
+DB_NAME=yourbankname
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+Go into dbt/ file and create a file names "profiles.yml", paste the following and complete with the same information as you did on previously step:
+```
+pokedata:
+  outputs:
+
+    dev:
+      type: postgres
+      threads: 1
+      host: db
+      port: 5432
+      user: yourusername
+      pass: yourpassword
+      dbname: yourbankname
+      schema: public
+
+  target: dev
+```
 
 ---
 ## 📈 Insights Preview
