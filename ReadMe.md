@@ -18,7 +18,8 @@ The project is containerized with **Docker** and follows a modern data stack app
 - **Visualization:** Interactive dashboards showing Pokémon attributes, types, and stats distributions.
 
 ## 🛠️ How to Run (TBA)
-Create a file named ".env", paste the following and then complete what is missing:
+Look for a file named ".env.exemple" and rename it to ".env". Then add your username, password and name for your db
+For exemple:
 ```
 DB_USER=yourusername
 DB_PASS=yourpassword
@@ -27,7 +28,8 @@ DB_HOST=localhost
 DB_PORT=5432
 ```
 
-Go into dbt/ file and create a file names "profiles.yml", paste the following and complete with the same information as you did on previously step:
+Go into dbt/ file and look for a file named "profiles.yml.exemple" and complete with the same information as you did on previously step.
+Exemple:
 ```
 pokedata:
   outputs:
@@ -48,9 +50,12 @@ After that run on your shell in sequence
 ```
 docker compose up -d
 python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
 cd python/ && python3 main.py
 ```
 
+After all of that, you can look into Metabase, port 3000, log in with the same info from your "profile.yml" file. Click in create new question and select the "Gold" tables, which are ready to be put into graphs
+
 ---
 ## 📈 Insights Preview
-(Space for a screenshot of your Metabase dashboard here!)
+[!Dashboard](images/Dashboard.png)
