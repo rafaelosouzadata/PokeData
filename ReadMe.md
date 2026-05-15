@@ -58,4 +58,4 @@ After all of that, you can look into Metabase, port 3000, log in with the same i
 
 ---
 ## 📈 Insights Preview
-[!Dashboard](images/Dashboard.png)
+![Dashboard](images/Dashboard.png)
