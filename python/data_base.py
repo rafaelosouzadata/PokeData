@@ -30,6 +30,10 @@ def get_metadata(engine):
 	metadata = MetaData(); metadata.reflect(bind=engine)
 	return metadata
 
+@task
+def save_to_db(conn, df):
+	df.to_sql("Raw_Pokemons", con=conn, schema="public", if_exists='replace', index=False)
+
 @flow(log_prints=True)
 def processo_conexao():
 	url = get_db_url()

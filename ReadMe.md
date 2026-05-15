@@ -44,6 +44,12 @@ pokedata:
 
   target: dev
 ```
+After that run on your shell in sequence
+```
+docker compose up -d
+python3 -m venv venv && source venv/bin/activate
+cd python/ && python3 main.py
+```
 
 ---
 ## 📈 Insights Preview
