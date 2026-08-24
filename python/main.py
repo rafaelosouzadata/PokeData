@@ -1,8 +1,10 @@
-from funcoes import *
-from insertion import *
 from functools import partial
 from prefect import task, flow
 from prefect_shell import ShellOperation
+
+from funcoes import *
+from insertion import *
+import data_base as mod_db
 
 
 # opcoes={
@@ -27,7 +29,7 @@ def dbt_run():
 def ETL():
 	conn = processo_conexao()
 	df = processo_completo()
-	save_to_db(conn, df)
+	mod_db.save_to_db(conn, df)
 	dbt_run()
 
 if __name__ == "__main__":
