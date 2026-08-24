@@ -3,6 +3,9 @@
 
 [![Status](https://img.shields.io/badge/status-under__development-orange)](#)
 
+## 📐 Architecture Diagram
+![Architecture Diagram](images/PokéData-Diagram.png)
+
 ## 🏗️ Architecture & Stack
 The project is containerized with **Docker** and follows a modern data stack approach:
 
