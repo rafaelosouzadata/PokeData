@@ -18,12 +18,12 @@ The project is containerized with **Docker** and follows a modern data stack app
 - **Visualization:** Interactive dashboards showing Pokémon attributes, types, and stats distributions.
 
 ## 🛠️ How to Run (TBA)
-Look for a file named ".env.exemple" and rename it to ".env". Then add your username, password and name for your db
+Look for a file named ".env.example" and rename it to ".env". Then add your username, password and name for your db
 For exemple:
 ```
 DB_USER=yourusername
 DB_PASS=yourpassword
-DB_NAME=yourbankname
+DB_NAME=yourdatabasename
 DB_HOST=localhost
 DB_PORT=5432
 ```
