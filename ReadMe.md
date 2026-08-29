@@ -20,7 +20,7 @@ The project is containerized with **Docker** and follows a modern data stack app
 - **Data Modeling:** Modular SQL transformations using dbt.
 - **Visualization:** Interactive dashboards showing Pokémon attributes, types, and stats distributions.
 
-## 🛠️ How to Run (TBA)
+## 🛠️ How to Run
 Look for a file named ".env.example" and rename it to ".env". Then add your username, password and name for your db
 For exemple:
 ```
