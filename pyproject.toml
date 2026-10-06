@@ -8,9 +8,9 @@ dependencies = [
     "pandas>=3.0.6",
     "pathlib>=1.0.1",
     "polars>=2.0.0",
-    "prefect>=3.8.8",
-    "prefect-shell>=0.3.7",
+    "psycopg>=3.3.6",
     "psycopg2-binary>=2.9.13",
+    "pyarrow>=25.0.1",
     "python-dotenv>=1.2.4",
     "sqlalchemy>=2.1.3",
 ]

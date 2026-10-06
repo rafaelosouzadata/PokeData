@@ -1,10 +1,8 @@
 from data_base import *
-from prefect import task
 from sqlalchemy import *
 
 
 class menu:
-    @task
     @staticmethod
     def exibir(opcoes):
 
@@ -44,6 +42,5 @@ class menu:
             print()
             return valor
 
-    @task
     def espaçar():
-        print("\n" + ">=<" * 20)
+        print("\n" + ">=<" * 20)banco

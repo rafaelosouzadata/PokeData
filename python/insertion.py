@@ -1,33 +1,7 @@
 import asyncio
 
 import httpx
-import pandas as pd
-from data_base import *
-from funcoes import *
-from prefect import flow, task
-from sqlalchemy import *
-
-
-@task
-def montar_lista(
-    pergunta="Escolha um número de 1 a 1025: ",
-):
-    lista = []
-
-    while True:
-        try:
-            dado = int(input(pergunta))
-
-            if not dado:
-                break
-            elif 0 < dado <= 1025:
-                lista.append(dado)
-
-            else:
-                print("Use valid numbers!")
-        except:
-            print("Use a number!")
-    return lista
+import polars as pl
 
 
 async def buscar_pokemon(client, id, sem):
@@ -36,7 +10,6 @@ async def buscar_pokemon(client, id, sem):
         return await client.get(url)
 
 
-@task
 async def conexao():
     sem = asyncio.Semaphore(20)
     async with httpx.AsyncClient() as client:
@@ -46,7 +19,6 @@ async def conexao():
     return response
 
 
-@task
 def pythonizando_dados(response):
     registros = []
     for r in response:
@@ -57,41 +29,31 @@ def pythonizando_dados(response):
     return registros
 
 
-@task
-def filtro(dados_sujos):
-    registros = []
-    for dados in dados_sujos:
-        dados_limpos = {
-            "id": dados["id"],
-            "name": dados["name"],
-            "types": ",".join([t["type"]["name"] for t in dados["types"]]),
-            "weight": dados["weight"],
-            "hight": dados["height"],
-        }
-        registros.append(dados_limpos)
-
-    df = pd.DataFrame(registros)
-
-
-@task
 def filtro2(dados_sujos):
-    df = pd.DataFrame(dados_sujos)
+    df = pl.DataFrame(dados_sujos)
 
-    df["types"] = df["types"].apply(lambda x: ",".join([t["type"]["name"] for t in x]))
+    df = df.with_columns(
+        types=pl.col("types").map_elements(
+            lambda x: ",".join([t["type"]["name"] for t in x])
+        )
+    )
 
-    df = df[["id", "name", "types", "weight", "height"]]
-
+    df = df.select("id", "name", "types", "weight", "height")
     return df
 
 
-@flow(log_prints=True, name="Processo Completo")
 def processo_completo():
-
+    print("iniciando extração de dados...")
     dados_brutos = asyncio.run(conexao())
+    print("limpando dados...")
     dados_sujos = pythonizando_dados(dados_brutos)
+    print("convertendo em dataframe...")
     df = filtro2(dados_sujos)
-
-    menu.espaçar()
-    print()
-    print(df)
+            
     return df
+
+
+if __name__ == "__main__":
+    df = processo_completo()
+
+    print(df)

@@ -1,13 +1,12 @@
 import os
 
+import polars as pl
+import sqlalchemy as sa
 from dotenv import load_dotenv
-from prefect import flow, task
-from sqlalchemy import *
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv(dotenv_path=".env")
 
 
-@task
 def get_db_url():
     credentials = {
         "user": os.getenv("DB_USER"),
@@ -20,29 +19,48 @@ def get_db_url():
     return url
 
 
-@task
 def create_db_engine(url):
     print(url)
-    engine = create_engine(url)
+    engine = sa.create_engine(url)
     return engine
 
 
-@task
 def get_metadata(engine):
-    metadata = MetaData()
+    metadata = sa.MetaData()
     metadata.reflect(bind=engine)
     return metadata
 
 
-@task
 def save_to_db(conn, df):
-    df.to_sql(
-        "Raw_Pokemons", con=conn, schema="public", if_exists="replace", index=False
-    )
+    try:
+        if type(df) == pl.DataFrame:
+            df = df.to_pandas()
+
+        df.to_sql(
+            "raw_pokemons", con=conn, schema="public", if_exists="replace", index=False
+        )
+    except Exception as e:
+        print(e)
 
 
-@flow(log_prints=True)
 def processo_conexao():
     url = get_db_url()
     engine = create_db_engine(url)
     return engine
+
+if __name__ == "__main__":
+
+    df = pl.DataFrame({
+        "id": [1, 2, 3],
+        "nome": ["Aiden", "Likulau", "Kai"]
+    })
+
+    print(df)
+
+    try:
+        if type(df) == pl.DataFrame:
+            df = df.to_pandas()
+    except Exception as e:
+        print(e)
+    finally:    
+        print(df)

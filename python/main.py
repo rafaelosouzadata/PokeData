@@ -1,32 +1,37 @@
+import subprocess
+
 import data_base as mod_db
-from funcoes import *
-from insertion import *
-from prefect import flow, task
-from prefect_shell import ShellOperation
-
-# opcoes={
-# 	"Pesquisar Pokemons":partial(processamento.processo_completo)
-# }
+import funcoes as mod_func
+import insertion as mod_ins
 
 
-# menu.exibir(opcoes)
-@task
 def dbt_run():
-    with ShellOperation(commands=["cd ..", "docker compose run dbt run"]) as cleaning:
-        process = cleaning.trigger()
-        process.wait_for_completion()
+    resultado = subprocess.run(
+        ["docker", "compose", "run", "dbt", "run"],
+        # cwd="..",
+        text=True,
+        capture_output=True,
+    )
 
-        resultado = process.fetch_result()
-        print(resultado)
+    print(resultado.stdout)
+
+    if resultado.returncode != 0:
+        print("Erro na execução:", resultado.stderr)
 
 
-@flow
 def ETL():
-    conn = processo_conexao()
-    df = processo_completo()
+    print("conectando ao banco de dados...")
+    conn = mod_func.processo_conexao()
+    print("iniciando conexão com API...")
+    df = mod_ins.processo_completo()
+    print("salvando no banco de dados...")
     mod_db.save_to_db(conn, df)
+    print("rodando dbt")
     dbt_run()
 
 
 if __name__ == "__main__":
-    ETL()
+    try:
+        ETL()
+    except Exception as e:
+        print(e)
