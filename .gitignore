@@ -9,3 +9,4 @@ dbt/target/
 python/A pesquisar depois/
 **/__pycache__
 venv/
+.ruff_cache
