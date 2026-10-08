@@ -1,7 +1,6 @@
 import subprocess
 
 import data_base as mod_db
-import funcoes as mod_func
 import insertion as mod_ins
 
 
@@ -21,11 +20,15 @@ def dbt_run():
 
 def ETL():
     print("conectando ao banco de dados...")
-    conn = mod_func.processo_conexao()
+    conn = mod_db.processo_conexao()
+
     print("iniciando conexão com API...")
-    df = mod_ins.processo_completo()
-    print("salvando no banco de dados...")
-    mod_db.save_to_db(conn, df)
+    dados = mod_ins.processo_completo()
+
+    for dado in dados:
+        print(f"salvando no banco de dados: {dado.which_api}")
+        mod_db.save_to_db(conn, dado)
+
     print("rodando dbt")
     dbt_run()
 

@@ -31,16 +31,20 @@ def get_metadata(engine):
     return metadata
 
 
-def save_to_db(conn, df):
+def save_to_db(conn, dados):
     try:
-        if type(df) == pl.DataFrame:
-            df = df.to_pandas()
+        match dados.which_api:
+            case "pokemon":
+                table = "raw_pokemons"
+            case "specie":
+                table = "raw_species"
 
-        df.to_sql(
-            "raw_pokemons", con=conn, schema="public", if_exists="replace", index=False
-        )
+        if type(dados.df) == pl.DataFrame:
+            df = dados.df.to_pandas()
+
+        df.to_sql(table, con=conn, schema="public", if_exists="replace", index=False)
     except Exception as e:
-        print(e)
+        print(f"Erro no salvamento: {e}")
 
 
 def processo_conexao():
@@ -48,6 +52,6 @@ def processo_conexao():
     engine = create_db_engine(url)
     return engine
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     print(get_db_url())

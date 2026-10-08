@@ -12,13 +12,14 @@ services:
     - POSTGRES_PASSWORD=${DB_PASS}
     - POSTGRES_DB=${DB_NAME}
 
-    # This code has been written on GitHub CodeSpace
-    # Thus I had to use this network_mode to connect each service
+    # GitHub Codespaces uses host networking because
+    # container-to-container communication through the
+    # Docker bridge network was not working.
     network_mode: host
 
-    # If you run it outside of codespace
-    # please comment the network_mode line
-    # And uncomment the network one for every service
+    # When running outside Codespaces:
+    # comment out "network_mode: host"
+    # and uncomment:
     # networks:
     # - poke-net
 
@@ -39,6 +40,8 @@ services:
     - db
 
     network_mode: host
+
+    # When running outside Codespaces:
     # networks:
     # - poke-net
 
@@ -54,6 +57,8 @@ services:
     - db
 
     network_mode: host
+
+    # When running outside Codespaces:
     # networks:
     # - poke-net
 
