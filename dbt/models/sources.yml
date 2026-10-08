@@ -4,4 +4,4 @@ sources:
   - name: pokedex_data
     schema: public
     tables:
-      - name: Raw_Pokemons
+      - name: raw_pokemons

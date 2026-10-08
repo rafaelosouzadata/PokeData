@@ -50,17 +50,4 @@ def processo_conexao():
 
 if __name__ == "__main__":
 
-    df = pl.DataFrame({
-        "id": [1, 2, 3],
-        "nome": ["Aiden", "Likulau", "Kai"]
-    })
-
-    print(df)
-
-    try:
-        if type(df) == pl.DataFrame:
-            df = df.to_pandas()
-    except Exception as e:
-        print(e)
-    finally:    
-        print(df)
+    print(get_db_url())

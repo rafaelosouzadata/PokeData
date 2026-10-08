@@ -1,3 +1,3 @@
 {{ config(materialized="table") }}
 
-SELECT * FROM {{  source('pokedex_data', 'Raw_Pokemons')  }}
+SELECT * FROM {{  source('pokedex_data', 'raw_pokemons')  }}

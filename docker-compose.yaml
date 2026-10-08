@@ -1,88 +1,63 @@
 services:
   db:
     image: postgres:15
-    container_name: "Poke_Postgre"
+    container_name: Poke_Postgre
     restart: unless-stopped
-
     ports:
-      - "5432:5432"
+    - 5432:5432
     volumes:
-      - poke_data:/var/lib/postgresql/data
+    - poke_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=${DB_NAME}
+    - POSTGRES_USER=${DB_USER}
+    - POSTGRES_PASSWORD=${DB_PASS}
+    - POSTGRES_DB=${DB_NAME}
 
-    networks:
-      - poke-net
+    # This code has been written on GitHub CodeSpace
+    # Thus I had to use this network_mode to connect each service
+    network_mode: host
+
+    # If you run it outside of codespace
+    # please comment the network_mode line
+    # And uncomment the network one for every service
+    # networks:
+    # - poke-net
 
   dbt:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
-    container_name: "Poke_DBT"
-
+    container_name: Poke_DBT
     ports:
-      - "8085:8080"
+    - 8085:8080
     volumes:
-      - ./dbt:/usr/app
+    - ./dbt:/usr/app
     environment:
-      - DBT_PROFILES_DIR=/usr/app
-      - DBT_PROJECT_DIR=/usr/app
-
-    profiles: ["cli"]
+    - DBT_PROFILES_DIR=/usr/app
+    - DBT_PROJECT_DIR=/usr/app
+    profiles:
+    - cli
     command: docs serve --port 8085
-
     depends_on:
-      - db
-    networks:
-      - poke-net
+    - db
 
-  # airflow:
-  #   build: .
-  #   container_name: "Poke_Airflow"
-
-
-  #   ports:
-  #     - "8080:8080"
-  #   volumes:
-  #     - ./dags:/opt/airflow/dags
-  #   environment:
-  #     - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${DB_USER}:${DB_PASS}@db/${DB_NAME}
-  #     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-  #     - _AIRFLOW_WWW_USER_CREATE=true
-  #     - _AIRFLOW_WWW_USER_USERNAME=${AF_USER}
-  #     - _AIRFLOW_WWW_USER_PASSWORD=${AF_PASS}
-  #     - _AIRFLOW_WWW_USER_ROLE=Admin
-  #     - _AIRFLOW_WWW_USER_FIRSTNAME=Airflow
-  #     - _AIRFLOW_WWW_USER_LASTNAME=Senhor_do_Universo
-  #     - _AIRFLOW_WWW_USER_EMAIL=admin@exemplo.com
-  #     # - _PIP_ADDITIONAL_REQUIREMENTS=requests pandas
-
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - poke-net
-
-  #   # command: standalone
-  #   command: >
-  #     bash -c "airflow db migrate && airflow webserver"
+    network_mode: host
+    # networks:
+    # - poke-net
 
   metabase:
-      image: metabase/metabase:latest
-      container_name: "Poke_metabase"
-      restart: always
+    image: metabase/metabase:latest
+    container_name: Poke_metabase
+    restart: always
+    ports:
+    - 3000:3000
+    environment:
+    - JAVA_OPTS=-Xmx512m
+    depends_on:
+    - db
 
-      ports:
-        - "3000:3000"
-      environment:
-        - JAVA_OPTS=-Xmx512m
-      depends_on:
-        - db
-
-      networks:
-        - poke-net
+    network_mode: host
+    # networks:
+    # - poke-net
 
 volumes:
-  poke_data:
-
+  poke_data: {}
 networks:
-  poke-net:
+  poke-net: {}
