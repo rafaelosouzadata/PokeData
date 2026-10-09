@@ -27,7 +27,7 @@ services:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
     container_name: Poke_DBT
     ports:
-    - 8085:8080
+    - 8080:8080
     volumes:
     - ./dbt:/usr/app
     environment:
