@@ -13,5 +13,5 @@ SELECT
 	tc.total_sum
 FROM
 	types_counted tc
-JOIN {{  ref('types')  }} t ON tc.type_id = t.id
+JOIN {{  ref('dim_types')  }} t ON tc.type_id = t.id
 ORDER BY tc.total_sum DESC
