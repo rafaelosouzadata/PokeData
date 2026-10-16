@@ -4,7 +4,7 @@ with "tipos_explodidos" as (
 	select
 		"id",
 		unnest(string_to_array(types, ',')) as "type"
-	from {{ ref('pokemon_clean')}}
+	from {{ ref('stg_pokemon')}}
 	)
 select 
 	te.id as "pokemon_id", 

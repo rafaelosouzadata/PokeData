@@ -5,7 +5,7 @@ WITH types_counted AS (
 		pt.type_id,
 		count(pt.type_id) AS total_sum
 	FROM
-		{{  ref('pokemon_types')  }} pt
+		{{  ref('int_pokemon_types')  }} pt
 	GROUP BY pt.type_id
 	)
 SELECT

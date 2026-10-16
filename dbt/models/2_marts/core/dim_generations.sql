@@ -5,7 +5,7 @@ WITH sorting_generation AS (
         id,
         generation,
         ROW_NUMBER()OVER(PARTITION BY generation ORDER BY id) AS index
-    FROM {{  ref('species_clean')}}
+    FROM {{  ref('stg_species')}}
 )
 SELECT 
     ROW_NUMBER()OVER(ORDER BY id) AS id_generation,

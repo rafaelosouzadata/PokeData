@@ -11,6 +11,6 @@ SELECT
     sc."is_baby",
     sc."is_legendary",
     sc."is_mythical"
-FROM {{  ref("pokemon_clean")}} pc
-JOIN {{  ref("species_clean")}} sc ON pc.id = sc.id
+FROM {{  ref("stg_pokemon")}} pc
+JOIN {{  ref("stg_species")}} sc ON pc.id = sc.id
 JOIN {{  ref("dim_generations")}} dg ON sc.generation = dg.generation

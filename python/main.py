@@ -1,12 +1,13 @@
 import subprocess
+from pathlib import Path
 
 import data_base as mod_db
 import insertion as mod_ins
 
 
-def dbt_run():
+def cli_execution(command: list):
     resultado = subprocess.run(
-        ["docker", "compose", "run", "dbt", "run"],
+        command,
         # cwd="..",
         text=True,
         capture_output=True,
@@ -16,6 +17,17 @@ def dbt_run():
 
     if resultado.returncode != 0:
         print("Erro na execução:", resultado.stderr)
+
+
+def dbt_run():
+    dbt_packages = Path(".") / "dbt" / "dbt_packages"
+
+    if not dbt_packages.exists():
+        dbt_deps_command = ["docker", "compose", "run", "--rm", "dbt", "deps"]
+        cli_execution(dbt_deps_command)
+
+    dbt_run_command = ["docker", "compose", "run", "--rm", "dbt", "run"]
+    cli_execution(dbt_run_command)
 
 
 def ETL():
