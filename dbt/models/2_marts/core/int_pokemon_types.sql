@@ -7,8 +7,8 @@ with "tipos_explodidos" as (
 	from {{ ref('stg_pokemon')}}
 	)
 select 
-	te.id as "pokemon_id", 
-	t.id as "type_id"
+	te.id as "id_pokemon", 
+	t.id_type
 from "tipos_explodidos" te
 	join {{ref("dim_types")}} t on t."type" = te.type
-order by te.id
+order by 1

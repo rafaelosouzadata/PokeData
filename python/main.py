@@ -26,7 +26,7 @@ def dbt_run():
         dbt_deps_command = ["docker", "compose", "run", "--rm", "dbt", "deps"]
         cli_execution(dbt_deps_command)
 
-    dbt_run_command = ["docker", "compose", "run", "--rm", "dbt", "run"]
+    dbt_run_command = ["docker", "compose", "run", "--rm", "dbt", "build"]
     cli_execution(dbt_run_command)
 
 

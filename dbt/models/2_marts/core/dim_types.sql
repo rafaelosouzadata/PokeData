@@ -6,6 +6,6 @@ with "tipos_separados" as (
 	from {{ ref('stg_pokemon')}}
 	)
 select 
-	row_number()over(order by type) as "id", "type" 
+	row_number()over(order by type) as "id_type", "type" 
 	from "tipos_separados"
 where "type" is not Null

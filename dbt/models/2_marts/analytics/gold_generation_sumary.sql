@@ -8,7 +8,7 @@ WITH prepare_pivot AS (
         dt.type,
         tpg.qty_type
     FROM {{ ref('fct_type_by_generation')}} tpg
-    JOIN {{ ref('dim_types')}} dt ON dt.id = tpg.type_id
+    JOIN {{ ref('dim_types')}} dt ON dt.id_type = tpg.id_type
 ), 
 
 pivoted_types AS (

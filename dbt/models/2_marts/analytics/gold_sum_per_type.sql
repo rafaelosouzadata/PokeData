@@ -2,16 +2,16 @@
 
 WITH types_counted AS (
 	SELECT
-		pt.type_id,
-		count(pt.type_id) AS total_sum
+		pt.id_type,
+		count(pt.id_type) AS total_sum
 	FROM
 		{{  ref('int_pokemon_types')  }} pt
-	GROUP BY pt.type_id
+	GROUP BY pt.id_type
 	)
 SELECT
 	t.type,
 	tc.total_sum
 FROM
 	types_counted tc
-JOIN {{  ref('dim_types')  }} t ON tc.type_id = t.id
+JOIN {{  ref('dim_types')  }} t ON tc.id_type = t.id_type
 ORDER BY tc.total_sum DESC

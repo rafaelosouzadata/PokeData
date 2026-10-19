@@ -2,10 +2,10 @@
 
 WITH pokemon_rowed AS (
 	SELECT
-		pt.pokemon_id,
-		count(pt.type_id) AS total
+		pt.id_pokemon,
+		count(pt.id_type) AS total
 	FROM {{  ref('int_pokemon_types')  }} pt
-	GROUP BY pt.pokemon_id
+	GROUP BY pt.id_pokemon
 	)
 SELECT
 	CASE
