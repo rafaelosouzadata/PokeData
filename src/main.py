@@ -57,12 +57,14 @@ def dbt_run():
         directory, so the function must be run from the project root. If
         ``dbt deps`` fails, ``dbt build`` still runs.
     """
-    dbt_packages = Path(__file__).parent / "dbt" / "dbt_packages"
+    dbt_packages = Path(__file__).parent.parent / "dbt" / "dbt_packages"
 
     if not dbt_packages.exists():
+        print("instalação de dependências do dbt")
         dbt_deps_command = ["docker", "compose", "run", "--rm", "dbt", "deps"]
         cli_execution(dbt_deps_command)
 
+    print("iniciando dbt build")
     dbt_run_command = ["docker", "compose", "run", "--rm", "dbt", "build"]
     cli_execution(dbt_run_command)
 
@@ -84,18 +86,21 @@ def ETL():
         inside those functions, so dbt may still run even when no new data was
         saved.
     """
-    print("conectando ao banco de dados...")
-    conn = mod_db.db_connect()
+    try:
+        print("conectando ao banco de dados...")
+        conn = mod_db.db_connect()
 
-    print("iniciando conexão com API...")
-    dados = mod_ins.insertion_pipeline()
+        print("iniciando conexão com API...")
+        dados = mod_ins.insertion_pipeline()
 
-    for dado in dados:
-        print(f"salvando no banco de dados: {dado.which_api}")
-        mod_db.save_to_db(conn, dado)
+        for dado in dados:
+            print(f"salvando no banco de dados: {dado.which_api}")
+            mod_db.save_to_db(conn, dado)
 
-    print("rodando dbt")
-    dbt_run()
+        print("rodando dbt")
+        dbt_run()
+    except Exception as e:
+        print(f"Erro no salvamento: {e}")
 
 
 if __name__ == "__main__":

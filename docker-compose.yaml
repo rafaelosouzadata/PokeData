@@ -12,17 +12,8 @@ services:
     - POSTGRES_PASSWORD=${DB_PASS}
     - POSTGRES_DB=${DB_NAME}
 
-    # GitHub Codespaces uses host networking because
-    # container-to-container communication through the
-    # Docker bridge network was not working.
     network_mode: host
-
-    # When running outside Codespaces:
-    # comment out "network_mode: host"
-    # and uncomment:
-    # networks:
-    # - poke-net
-
+  
   dbt:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
     container_name: Poke_DBT
@@ -38,12 +29,10 @@ services:
     command: docs serve --port 8085
     depends_on:
     - db
+    env_file:
+      - .env
 
     network_mode: host
-
-    # When running outside Codespaces:
-    # networks:
-    # - poke-net
 
   metabase:
     image: metabase/metabase:latest
@@ -57,10 +46,6 @@ services:
     - db
 
     network_mode: host
-
-    # When running outside Codespaces:
-    # networks:
-    # - poke-net
 
 volumes:
   poke_data: {}

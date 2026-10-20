@@ -8,7 +8,6 @@ Environment variables:
     DB_USER: Database user.
     DB_PASS: Database password.
     DB_NAME: Database name.
-    DB_HOST: Database host.
     DB_PORT: Database port.
 """
 
@@ -24,7 +23,7 @@ load_dotenv(dotenv_path=".env")
 def get_db_url():
     """Build the PostgreSQL connection URL from environment variables.
 
-    Reads ``DB_USER``, ``DB_PASS``, ``DB_HOST``, ``DB_PORT`` and ``DB_NAME``.
+    Reads ``DB_USER``, ``DB_PASS``, ``DB_PORT`` and ``DB_NAME``.
 
     Returns:
         str: URL in the form
@@ -41,10 +40,11 @@ def get_db_url():
         "user": os.getenv("DB_USER"),
         "pass": os.getenv("DB_PASS"),
         "bank": os.getenv("DB_NAME"),
-        "host": os.getenv("DB_HOST"),
+        "host": "localhost",
         "port": os.getenv("DB_PORT"),
     }
     url = f"postgresql://{credentials['user']}:{credentials['pass']}@{credentials['host']}:{credentials['port']}/{credentials['bank']}"
+
     return url
 
 
@@ -99,20 +99,14 @@ def save_to_db(conn, data):
         does not stop the caller. This includes the cases where ``data.which_api``
         is invalid or ``data.df`` is not a ``polars.DataFrame``.
     """
-    try:
-        match data.which_api:
-            case "pokemon":
-                table = "raw_pokemons"
-            case "specie":
-                table = "raw_species"
+    match data.which_api:
+        case "pokemon":
+            table = "public.raw_pokemons"
+        case "specie":
+            table = "public.raw_species"
 
-        if type(data.df) == pl.DataFrame:
-            df = data.df.to_pandas()
-
-        df.to_sql(table, con=conn, schema="public", if_exists="replace", index=False)
-    except Exception as e:
-        print(f"Erro no salvamento: {e}")
-
+    data.df.write_database(table, connection=conn, if_table_exists="replace")
+    print("salvo com sucesso!")
 
 def db_connect():
     """Create an engine from the environment configuration.

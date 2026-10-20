@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:15
+    container_name: Poke_Postgre
+    restart: unless-stopped
+    ports:
+    - 5432:5432
+    volumes:
+    - poke_data:/var/lib/postgresql/data
+    environment:
+    - POSTGRES_USER=${DB_USER}
+    - POSTGRES_PASSWORD=${DB_PASS}
+    - POSTGRES_DB=${DB_NAME}
+
+    networks:
+     - poke-net
+
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
+    container_name: Poke_DBT
+    ports:
+    - 8080:8080
+    volumes:
+    - ./dbt:/usr/app
+    environment:
+    - DBT_PROFILES_DIR=/usr/app
+    - DBT_PROJECT_DIR=/usr/app
+    profiles:
+    - cli
+    command: docs serve --port 8085
+    depends_on:
+    - db
+
+    networks:
+    - poke-net
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: Poke_metabase
+    restart: always
+    ports:
+    - 3000:3000
+    environment:
+    - JAVA_OPTS=-Xmx512m
+    depends_on:
+    - db
+
+    networks:
+    - poke-net
+
+volumes:
+  poke_data: {}
+networks:
+  poke-net: {}

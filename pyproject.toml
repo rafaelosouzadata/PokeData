@@ -10,7 +10,7 @@ dependencies = [
     "polars>=2.0.0",
     "psycopg>=3.3.6",
     "psycopg2-binary>=2.9.13",
-    "pyarrow>=25.0.1",
+    "pyarrow>=26.0.0",
     "python-dotenv>=1.2.4",
     "sqlalchemy>=2.1.3",
 ]
