@@ -12,8 +12,9 @@ services:
     - POSTGRES_PASSWORD=${DB_PASS}
     - POSTGRES_DB=${DB_NAME}
 
-    network_mode: host
-  
+    networks:
+     - poke-net
+
   dbt:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
     container_name: Poke_DBT
@@ -31,8 +32,8 @@ services:
     - db
     env_file:
       - .env
-
-    network_mode: host
+    networks:
+    - poke-net
 
   metabase:
     image: metabase/metabase:latest
@@ -45,7 +46,8 @@ services:
     depends_on:
     - db
 
-    network_mode: host
+    networks:
+    - poke-net
 
 volumes:
   poke_data: {}

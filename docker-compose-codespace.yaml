@@ -3,8 +3,6 @@ services:
     image: postgres:15
     container_name: Poke_Postgre
     restart: unless-stopped
-    ports:
-    - 5432:5432
     volumes:
     - poke_data:/var/lib/postgresql/data
     environment:
@@ -12,14 +10,11 @@ services:
     - POSTGRES_PASSWORD=${DB_PASS}
     - POSTGRES_DB=${DB_NAME}
 
-    networks:
-     - poke-net
-
+    network_mode: host
+  
   dbt:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
     container_name: Poke_DBT
-    ports:
-    - 8080:8080
     volumes:
     - ./dbt:/usr/app
     environment:
@@ -30,23 +25,21 @@ services:
     command: docs serve --port 8085
     depends_on:
     - db
+    env_file:
+      - .env
 
-    networks:
-    - poke-net
+    network_mode: host
 
   metabase:
     image: metabase/metabase:latest
     container_name: Poke_metabase
     restart: always
-    ports:
-    - 3000:3000
     environment:
     - JAVA_OPTS=-Xmx512m
     depends_on:
     - db
 
-    networks:
-    - poke-net
+    network_mode: host
 
 volumes:
   poke_data: {}

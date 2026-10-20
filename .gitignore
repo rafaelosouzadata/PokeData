@@ -1,7 +1,6 @@
 PokeLog
 .env
 dbt/seeds/
-dbt/profiles.yml
 dbt/.user.yml
 dbt/logs/
 dbt/dbt/target/

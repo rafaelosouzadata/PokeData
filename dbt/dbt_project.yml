@@ -2,7 +2,6 @@ name: 'pokedata'
 version: '1.0.0'
 config-version: 2
 
-# Esse nome DEVE ser o mesmo que você colocou no seu profiles.yml
 profile: 'pokedata' 
 
 model-paths: ["models"]
@@ -18,8 +17,4 @@ clean-targets:
 
 models:
   pokedata:
-    # Aqui você define se quer que as tabelas sejam recriadas (table) 
-    # ou apenas atualizadas (incremental) por padrão
     materialized: table
-    # pokedex:
-    #   +schema: pokedex
