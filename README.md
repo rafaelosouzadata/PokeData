@@ -11,7 +11,7 @@
 
 ## 📐 Architecture
 
-![Architecture Diagram](images/pokedata-diagram.png)
+![Architecture Diagram](images/pokedata-diagram-new.png)
 
 **Flow:** PokeAPI → Python (extract + load) → PostgreSQL `raw` tables → dbt (staging → dimensions/facts → gold) → Metabase.
 
