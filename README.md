@@ -63,12 +63,8 @@ DB_USER=yourusername
 DB_PASS=yourpassword
 DB_NAME=yourdatabase
 DB_PORT=5432
-```
 
-**Only if you are on GitHub Codespaces**, also add this line (it is commented out in `.env.example`):
-
-```dotenv
-COMPOSE_FILE=docker-compose-codespace.yml
+COMPOSE_FILE= # Chose which file according to where it will run
 ```
 
 > Check which compose file will be used with `docker compose config --files`.
