@@ -64,7 +64,10 @@ DB_PASS=yourpassword
 DB_NAME=yourdatabase
 DB_PORT=5432
 
-COMPOSE_FILE= # Chose which file according to where it will run
+# Chose which file according to where it will run:
+# docker-compose-codespace.yaml for codespace
+# docker-compose-machine.yaml for your pc
+COMPOSE_FILE=
 ```
 
 > Check which compose file will be used with `docker compose config --files`.
@@ -112,8 +115,8 @@ Data is kept in the `poke_data` Docker volume. Add `-v` to remove it as well.
 ├── src/                          # Extraction, loading and orchestration (Python)
 ├── dbt/                          # dbt project (models, tests)
 ├── images/                       # Diagram and dashboard screenshots
-├── docker-compose.yml            # Regular setup (your machine)
-├── docker-compose-codespace.yml  # Host-network setup (GitHub Codespaces)
+├── docker-compose-machine.yaml            # Regular setup (your machine)
+├── docker-compose-codespace.yaml  # Host-network setup (GitHub Codespaces)
 └── .env.example                  # Environment variables template
 ```
 
